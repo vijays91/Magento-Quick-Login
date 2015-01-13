@@ -1,0 +1,139 @@
+<?php 
+$current_customer_id = 0;
+$quickMenuEnable = Mage::helper('quicklogin/data')->quick_login_enable();
+if(Mage::getSingleton('customer/session')->isLoggedIn()) {
+	$current_customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+ }
+ 
+if($quickMenuEnable)
+{
+?>
+
+<div style="display:none;" class="window-overlay" id="window-overlay"></div>
+<div style="display:none;" class="remember-me-popup" id="remember-me-popup-quicklogin">
+	<!-- Popup Header Part -->
+    <div class="remember-me-popup-head">
+        <h3><?php echo $this->__('Quick Login');?></h3>
+        <a title="Close" class="remember-me-popup-close" href="javascript:">
+			<?php echo $this->__('Close');?>
+		</a>
+    </div>	
+	<!-- Popup Body Part -->
+    <div class="remember-me-popup-body">	
+		<div class="quick_login_popup">
+			<div id="quick_login" class="input-box">			
+				<div id="quick_customer_login">
+					<?php 
+						echo $this->getLayout()->createBlock('customer/form_login')->setTemplate('persistent/customer/form/login.phtml')->toHtml(); 
+					?> 
+					<a class="f-left quicklogin" href="javascript:" onclick="return quick_login_show('block', 'none', 'none');">
+						<?php echo $this->__('Forgot Your Password?'); ?>
+					</a>
+					&nbsp;&nbsp;&nbsp;
+					<a class="f-left quicklogin" href="javascript:" onclick="return quick_login_show('none', 'block', 'none');">
+						<?php echo $this->__('Create New Account'); ?>
+					</a>
+				</div>
+
+				<div id="quick_customer_create">
+					<?php 
+						echo $this->getLayout()->createBlock('customer/form_register')->setTemplate('customer/form/register.phtml')->toHtml(); 
+					?> 
+					<a class="f-left quicklogin" href="javascript:" onclick="return quick_login_show('none', 'none', 'block');">
+						<?php echo $this->__('Goto Login'); ?>
+					</a><br/>
+				</div>
+
+				<div id="quick_customer_forgetpassword">
+					<?php
+						echo $this->getLayout()->createBlock('customer/account_forgotpassword')->setTemplate('customer/form/forgotpassword.phtml')->toHtml();
+						?>
+					<a class="f-left quicklogin" href="javascript:" onclick="return quick_login_show('none', 'none', 'block');">
+						<?php echo $this->__('Goto Login'); ?>
+					</a><br/>
+				</div>
+			</div>
+		</div>		
+		<!-- Popup Footer Part -->
+        <div class="remember-me-popup-close-button a-right">
+            <a title="Close" class="remember-me-popup-close button" href="javascript:">
+				<span><?php echo $this->__('Close');?></span>
+			</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function toggleRememberMepopupQuickLogin(event)
+	{
+        if($('remember-me-popup-quicklogin')){
+            var viewportHeight = document.viewport.getHeight(),
+                docHeight      = $$('body')[0].getHeight(),
+                height         = docHeight > viewportHeight ? docHeight : viewportHeight;
+            $('remember-me-popup-quicklogin').toggle();
+            $('window-overlay').setStyle({ height: height + 'px' }).toggle();
+        }
+    }
+	
+    document.observe("dom:loaded", function() {
+        new Insertion.Bottom($$('body')[0], $('window-overlay'));
+        new Insertion.Bottom($$('body')[0], $('remember-me-popup-quicklogin'));
+        $$('#remember-me-popup-quicklogin .remember-me-popup-close').each(function(element){
+            Event.observe(element, 'click', toggleRememberMepopupQuickLogin);
+        });
+		$('remember-me-popup-quicklogin').setStyle({ top: '30%' });
+    });
+	
+	function popup_quick_login()
+	{
+		toggleRememberMepopupQuickLogin();
+		quickloginReset();
+		quick_login_show('none', 'none', 'block');
+		return false;
+	}
+	
+	function quick_login_show(forgetPassword, create, login)
+	{
+		$('quick_customer_forgetpassword').setStyle({ display: forgetPassword });
+		$('quick_customer_create').setStyle({ display: create });
+		$('quick_customer_login').setStyle({ display: login });
+		quickloginReset();
+	}
+	
+	function quickloginReset()
+	{
+		accountLogin.validator.reset();
+		accountCrate.validator.reset();
+		forgetpassword.validator.reset();
+	}
+	
+	$('popup_quick_login').setAttribute('href', "javascript:");		
+	
+	if(!<?php echo $current_customer_id;?>)
+	{
+			$$('#quick_customer_login #email')[0].setAttribute('id', "quicklogin_email");
+			$$('#quick_customer_login #pass')[0].setAttribute('id', "quicklogin_pass");
+			
+			$$('#quick_customer_forgetpassword #email_address')[0].setAttribute('id', "quicklogin_forget_email_address");
+			
+			$$('#quick_customer_create #firstname')[0].setAttribute('id', "quicklogin_firstname");
+			$$('#quick_customer_create #lastname')[0].setAttribute('id', "quicklogin_lastname");
+			$$('#quick_customer_create #email_address')[0].setAttribute('id', "quicklogin_email_address");
+			$$('#quick_customer_create #password')[0].setAttribute('id', "quicklogin_password");
+			$$('#quick_customer_create #confirmation')[0].setAttribute('id', "quicklogin_confirmation");
+
+		$$('#quick_customer_forgetpassword > form')[0].setAttribute('action', "<?php echo $this->getUrl().'customer/account/forgotpasswordpost/';?>");		
+		$$('#quick_customer_login form')[0].setAttribute('id', "quickLogin-login");
+		$$('#quick_customer_create form')[0].setAttribute('id', "quickLogin-create");
+		$$('#quick_customer_forgetpassword > form')[0].setAttribute('id', "quickLogin-forgetpassword");
+		//<![CDATA[
+		var forgetpassword = new VarienForm('quickLogin-forgetpassword', true);
+		var accountLogin = new VarienForm('quickLogin-login', true);
+		var accountCrate = new VarienForm('quickLogin-create', true);		
+		//]]>
+	}
+</script>
+
+<?php
+}
+?>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Vijaystore_Quicklogin>
+            <version>1.0.0</version>
+        </Vijaystore_Quicklogin>
+    </modules>
+	
+	<frontend>
+		<layout>
+			<updates>
+				<quicklogin>
+					<file>vijaystore/quicklogin.xml</file>
+				</quicklogin>
+			</updates>
+		</layout>
+	</frontend>
+	
+    <global>
+		<!-- Initialize the Block class -->
+		<blocks>
+            <quicklogin>
+                <class>Vijaystore_Quicklogin_Block</class>
+            </quicklogin>
+        </blocks>
+		
+		<!-- Initialize the Helper class -->
+		<helpers>
+			<quicklogin>
+				<class>Vijaystore_Quicklogin_Helper</class>
+			</quicklogin>
+		</helpers>
+    </global>
+	
+	<adminhtml>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+				    <children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<quicklogin_tab>
+											<title>Quick Login Setting</title>
+										</quicklogin_tab>				
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+	</adminhtml>
+	
+	<default>
+		<quicklogin_tab>
+			<quicklogin_setting>
+				<quicklogin_active>1</quicklogin_active>
+			</quicklogin_setting>
+		</quicklogin_tab>
+	</default>	
+</config>

@@ -1,0 +1,14 @@
+<?php
+$current_customer_id = "";
+if(Mage::getSingleton('customer/session')->isLoggedIn()) {
+	$current_customer_id = Mage::getSingleton('customer/session')->getCustomer()->getId();
+ }
+	$quickLoginEnable = 1;//Mage::helper('customericon/data')->quick_login_enable();
+	if(!$current_customer_id && $quickLoginEnable)
+	{
+		echo "<li class='last'><a title='Quick Login' onclick='popup_quick_login();'  href='javascript:'>";
+		echo $this->__('Quick Login');
+		echo "</a> </li>";
+	}
+		
+?>

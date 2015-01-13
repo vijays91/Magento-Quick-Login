@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+	<default>
+		<reference name="head">         
+			<action method="addItem">
+				<type>skin_css</type>
+				<name>quicklogin/css/quicklogin.css</name>
+				<params/>
+			</action>
+		<!--
+			<action method="addItem">
+				<type>skin_js</type>
+				<name>quicklogin/js/jquery-1.7.1.min.js</name>
+				<params/>
+			</action>	  -->
+		</reference>
+
+		<reference name="before_body_end">                      
+			<block type="core/template" name="quicklogin_pop" template="vijaystore/quicklogin/quicklogin.phtml" ifconfig="quicklogin_tab/quicklogin_setting/quicklogin_active" />
+		</reference>
+		
+		<reference name="top.links">
+			<action method="addLink" translate="label title" module="customer" ifconfig="quicklogin_tab/quicklogin_setting/quicklogin_active">
+				<label>Quick Login</label>
+				<url>quicklogin</url>
+				<title>Quick Login</title>
+				<prepare>false</prepare>
+				<urlParams/>
+				<position>150</position>
+				<liParams>id="quick_login"</liParams>
+				<aParams>href="javascript:" onclick="popup_quick_login();" id="popup_quick_login"</aParams>
+			</action>
+		</reference>
+	</default>
+<!-- 
+	<customer_account_login>
+		<reference name="top.links">
+			<action method="removeLinkByUrl">
+				<url helper="quicklogin/getQuickLoginUrl"/>
+			</action>
+		</reference>
+		<remove name="quicklogin_pop" />
+	</customer_account_login>
+	
+	<customer_account_forgotpassword>
+		<reference name="top.links">
+			<action method="removeLinkByUrl">
+				<url helper="quicklogin/getQuickLoginUrl"/>
+			</action>
+		</reference>
+		<remove name="quicklogin_pop" />
+	</customer_account_forgotpassword>
+
+    <customer_account_create translate="label">
+		<reference name="top.links">
+			<action method="removeLinkByUrl"><url helper="quicklogin/getQuickLoginUrl"/></action>
+		</reference>
+		<remove name="quicklogin_pop" />
+	</customer_account_create>	
+-->
+	<customer_logged_in>
+		<reference name="top.links">
+			<action method="removeLinkByUrl"><url helper="quicklogin/getQuickLoginUrl"/></action>
+		</reference>
+		<remove name="quicklogin_pop" />
+	</customer_logged_in>
+</layout>
